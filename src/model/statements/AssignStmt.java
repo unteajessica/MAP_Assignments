@@ -1,5 +1,6 @@
 package model.statements;
 
+import exceptions.TypeMismatch;
 import model.PrgState;
 import model.adt.*;
 import model.expressions.*;
@@ -28,7 +29,7 @@ public class AssignStmt implements IStmt {
             Value val = exp.eval(symTable);
             Type typeId = (symTable.lookup(id)).getType();
             if (!val.getType().equals(symTable.lookup(id).getType())) {
-                throw new MyException("Type mismatch in assignment");
+                throw new TypeMismatch();
             }
             else {
                 symTable.update(id, val);

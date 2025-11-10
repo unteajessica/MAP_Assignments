@@ -1,6 +1,8 @@
 package model.statements;
 
+import exceptions.FileException;
 import exceptions.MyException;
+import exceptions.ValueTypeError;
 import model.PrgState;
 import model.adt.MyIDictionary;
 import model.adt.MyIFileTable;
@@ -30,21 +32,21 @@ public class closeRFileStmt implements IStmt {
         Value val = exp.eval(symTable);
 
         if (!val.getType().equals(new StringType())) {
-            throw new MyException("closeRFile: expression is not string-typed");
+            throw new ValueTypeError();
         }
 
         MyIFileTable fileTable = state.getFileTable();
         String fileName = ((StringValue) val).getVal();
 
         if (!fileTable.isDefined(fileName)) {
-            throw new MyException("closeRFile: file " + fileName + " is not opened");
+            throw new FileException();
         }
 
         BufferedReader fileDescriptor = fileTable.lookup(fileName);
         try {
             fileDescriptor.close();
         } catch (IOException e) {
-            throw new MyException("closeRFile: error closing file " + fileName + ": " + e.getMessage());
+            throw new FileException();
         }
 
         fileTable.remove(fileName);

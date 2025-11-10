@@ -1,4 +1,5 @@
 package model.statements;
+import exceptions.FileException;
 import exceptions.MyException;
 import model.PrgState;
 import model.adt.MyIDictionary;
@@ -32,28 +33,28 @@ public class readFileStmt implements IStmt {
         MyIDictionary<String, Value> symTable = state.getSymTable();
 
         if (!symTable.isDefined(var_name)) {
-            throw new MyException("readFile: variable " + var_name + " is not defined");
+            throw new FileException();
         }
 
         if (!symTable.lookup(var_name).getType().equals(new IntType())) {
-            throw new MyException("readFile: variable " + var_name + " is not an integer");
+            throw new FileException();
         }
 
         Value fileNameVal = exp.eval(symTable);
         if (!fileNameVal.getType().equals(new StringType())) {
-            throw new MyException("readFile: expression is not string-typed");
+            throw new FileException();
         }
 
         String fileName = ((StringValue) fileNameVal).getVal();
 
         if (!state.getFileTable().isDefined(fileName)) {
-            throw new MyException("readFile: file " + fileName + " is not opened");
+            throw new FileException();
         }
 
         // read line from file
         BufferedReader fileDescriptor = state.getFileTable().lookup(fileName);
         if (fileDescriptor == null) {
-            throw new MyException("readFile: file " + fileName + " is not opened");
+            throw new FileException();
         }
 
         int value;
@@ -67,7 +68,7 @@ public class readFileStmt implements IStmt {
                 value = Integer.parseInt(line);
             }
         } catch (IOException e) {
-            throw new MyException("readFile: error reading file " + fileName + ": " + e.getMessage());
+            throw new FileException();
         }
 
         symTable.update(var_name, new IntValue(value));

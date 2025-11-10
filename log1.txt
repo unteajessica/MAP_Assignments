@@ -1,48 +1,42 @@
-Original Program:
-(int v;(v=2;print(v)))
------------------------------------------------
 ExeStack: [(int v;(v=2;print(v)))]
 SymTable: {}
 Out: []
 FileTable: {}
 
-Original Program:
-(int v;(v=2;print(v)))
------------------------------------------------
+===============================================
 ExeStack: [(v=2;print(v)), int v]
 SymTable: {}
 Out: []
 FileTable: {}
 
-Original Program:
-(int v;(v=2;print(v)))
------------------------------------------------
+===============================================
 ExeStack: [(v=2;print(v))]
 SymTable: {v=0}
 Out: []
 FileTable: {}
 
-Original Program:
-(int v;(v=2;print(v)))
------------------------------------------------
+===============================================
 ExeStack: [print(v), v=2]
 SymTable: {v=0}
 Out: []
 FileTable: {}
 
-Original Program:
-(int v;(v=2;print(v)))
------------------------------------------------
+===============================================
 ExeStack: [print(v)]
 SymTable: {v=2}
 Out: []
 FileTable: {}
 
-Original Program:
-(int v;(v=2;print(v)))
------------------------------------------------
+===============================================
 ExeStack: []
 SymTable: {v=2}
 Out: [2]
 FileTable: {}
 
+===============================================
+ExeStack: []
+SymTable: {v=2}
+Out: [2]
+FileTable: {}
+
+===============================================

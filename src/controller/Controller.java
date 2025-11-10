@@ -6,6 +6,7 @@ import model.statements.IStmt;
 import repository.IRepo;
 
 import java.io.IOException;
+import java.util.EmptyStackException;
 
 public class Controller implements IController {
     private final IRepo repo;
@@ -20,9 +21,9 @@ public class Controller implements IController {
     public boolean getDisplayFlag() { return displayFlag; }
 
     @Override
-    public PrgState oneStep(PrgState state) throws MyException {
+    public PrgState oneStep(PrgState state) throws EmptyStackException {
         MyIStack<IStmt> stk = state.getStack();
-        if (stk.isEmpty()) throw new MyException("Empty stack");
+        if (stk.isEmpty()) throw new EmptyStackException();
         IStmt crtStmt = stk.pop();
         return crtStmt.execute(state);
     }

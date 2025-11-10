@@ -1,6 +1,8 @@
 package model.expressions;
 
 import exceptions.MyException;
+import exceptions.OperandNotInteger;
+import exceptions.UnknownOperator;
 import model.adt.MyIDictionary;
 import model.expressions.Exp;
 import model.types.IntType;
@@ -26,9 +28,9 @@ public class RelationalExp implements Exp {
         Value v2 = exp2.eval(tbl);
 
         if (!(v1.getType().equals(new IntType())))
-            throw new MyException("First operand is not an integer.");
+            throw new OperandNotInteger();
         if (!(v2.getType().equals(new IntType())))
-            throw new MyException("Second operand is not an integer.");
+            throw new OperandNotInteger();
 
         int n1 = ((IntValue)v1).getVal();
         int n2 = ((IntValue)v2).getVal();
@@ -40,7 +42,7 @@ public class RelationalExp implements Exp {
             case "!=" -> new BoolValue(n1 != n2);
             case ">" -> new BoolValue(n1 > n2);
             case ">=" -> new BoolValue(n1 >= n2);
-            default -> throw new MyException("Invalid relational operator: " + operator);
+            default -> throw new UnknownOperator();
         };
     }
 

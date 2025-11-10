@@ -33,12 +33,14 @@ public class Repo implements IRepo {
     public void logPrgStateExec() throws MyException, IOException {
         PrintWriter logFile = new PrintWriter(new BufferedWriter(new FileWriter(logFilePath, true)));
         PrgState currentPrg = getCurrentPrg();
-
+        /**
         logFile.println("Original Program:");
         logFile.println(currentPrg.getOriginalProgram().toString());
         logFile.println("-----------------------------------------------");
+         **/
 
         logFile.println(currentPrg.toString());
+        logFile.println("===============================================");
 
         logFile.close();
     }

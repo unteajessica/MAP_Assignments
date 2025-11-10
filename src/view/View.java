@@ -79,8 +79,11 @@ public class View {
                                                         new CompStmt(
                                                                 new PrintStmt(new VarExp("var")), // print(var)
                                                                 new CompStmt(
-                                                                        new readFileStmt(new VarExp("varf"), "var"), // readFile(varf, var)
-                                                                        new PrintStmt(new VarExp("var")) // print(var)
+                                                                        new readFileStmt(new VarExp("varf"), "var"),
+                                                                        new CompStmt(// readFile(varf, var)
+                                                                            new PrintStmt(new VarExp("var")),
+                                                                                new closeRFileStmt(new VarExp("varf"))// print(var)
+                                                                        )
                                                                 )
                                                         )
                                                 )

@@ -1,5 +1,6 @@
 package model.statements;
 
+import exceptions.FileException;
 import exceptions.MyException;
 import exceptions.TypeNotFound;
 import model.PrgState;
@@ -33,12 +34,12 @@ public class openRFileStmt implements IStmt{
 
         Value val = exp.eval(symTable);
         if (!val.getType().equals(new StringType())) {
-            throw new MyException("openRFile: expression is not string-typed");
+            throw new FileException();
         }
 
         String fileName = ((StringValue) val).getVal();
         if (fileTable.isDefined(fileName)) {
-            throw new MyException("openRFile: file already opened");
+            throw new FileException();
         }
 
         // open file
@@ -46,7 +47,7 @@ public class openRFileStmt implements IStmt{
             BufferedReader br = new BufferedReader(new FileReader(fileName));
             fileTable.put(fileName, br);
         } catch (IOException e) {
-            throw new MyException("openRFile: can't open file " + fileName + ": " + e.getMessage());
+            throw new FileException();
         }
 
         System.out.println("Opened file: " + fileName);

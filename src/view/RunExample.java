@@ -20,7 +20,7 @@ public class RunExample extends Command {
         } catch (MyException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Unexpected error: " + e);
+            System.out.println("Unexpected error: " + e.getMessage());
         }
     }
 }

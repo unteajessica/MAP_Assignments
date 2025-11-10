@@ -5,11 +5,7 @@ import model.values.Value;
 public class IntType implements Type {
     @Override
     public boolean equals(Object o) {
-        if (o instanceof IntType) {
-            return true;
-        }
-        else
-            return false;
+        return o instanceof IntType;
     }
 
     @Override
