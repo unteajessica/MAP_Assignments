@@ -2,11 +2,11 @@ package model.expressions;
 
 import exceptions.DivisionByZero;
 import model.adt.MyIDictionary;
+import model.adt.MyIHeap;
 import model.types.IntType;
 import model.values.IntValue;
 import model.values.Value;
 import exceptions.MyException;
-import exceptions.DivisionByZero;
 import exceptions.OperandNotInteger;
 
 public class ArithExp implements Exp {
@@ -29,11 +29,11 @@ public class ArithExp implements Exp {
         return "(" + left.toString() + opChar + right.toString() + ")";
     }
 
-    public Value eval(MyIDictionary<String, Value> tbl) throws MyException {
-        Value v1 = left.eval(tbl);
+    public Value eval(MyIDictionary<String, Value> tbl, MyIHeap heap) throws MyException {
+        Value v1 = left.eval(tbl, heap);
         Value v2;
         if (v1.getType().equals(new IntType())) {
-            v2 = right.eval(tbl);
+            v2 = right.eval(tbl, heap);
             if (v2.getType().equals(new IntType())) {
                 IntValue i1 = (IntValue)v1;
                 IntValue i2 = (IntValue)v2;

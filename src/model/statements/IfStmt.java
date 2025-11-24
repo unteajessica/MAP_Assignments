@@ -9,9 +9,9 @@ import model.types.*;
 import exceptions.MyException;
 
 public class IfStmt implements IStmt {
-    private Exp exp;
-    private IStmt thenS;
-    private IStmt elseS;
+    private final Exp exp;
+    private final IStmt thenS;
+    private final IStmt elseS;
 
     public IfStmt(Exp e, IStmt t, IStmt el) {
         exp = e;
@@ -24,7 +24,7 @@ public class IfStmt implements IStmt {
     }
 
     public PrgState execute(PrgState state) throws MyException {
-        Value val = exp.eval(state.getSymTable());
+        Value val = exp.eval(state.getSymTable(), state.getHeap());
         if (!val.getType().equals(new BoolType())) {
             throw new TypeNotFound();
         }

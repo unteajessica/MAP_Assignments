@@ -6,7 +6,6 @@ import model.adt.MyIDictionary;
 import model.expressions.Exp;
 import model.types.IntType;
 import model.types.StringType;
-import model.types.Type;
 import model.values.IntValue;
 import model.values.StringValue;
 import model.values.Value;
@@ -40,7 +39,7 @@ public class readFileStmt implements IStmt {
             throw new FileException();
         }
 
-        Value fileNameVal = exp.eval(symTable);
+        Value fileNameVal = exp.eval(symTable, state.getHeap());
         if (!fileNameVal.getType().equals(new StringType())) {
             throw new FileException();
         }

@@ -2,7 +2,6 @@ package model.statements;
 
 import exceptions.FileException;
 import exceptions.MyException;
-import exceptions.TypeNotFound;
 import model.PrgState;
 import model.adt.MyIDictionary;
 import model.adt.MyIFileTable;
@@ -32,7 +31,7 @@ public class openRFileStmt implements IStmt{
         MyIDictionary<String, Value> symTable = state.getSymTable();
         MyIFileTable fileTable = state.getFileTable();
 
-        Value val = exp.eval(symTable);
+        Value val = exp.eval(symTable, state.getHeap());
         if (!val.getType().equals(new StringType())) {
             throw new FileException();
         }

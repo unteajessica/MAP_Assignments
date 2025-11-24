@@ -4,7 +4,7 @@ import exceptions.MyException;
 import exceptions.OperandNotInteger;
 import exceptions.UnknownOperator;
 import model.adt.MyIDictionary;
-import model.expressions.Exp;
+import model.adt.MyIHeap;
 import model.types.IntType;
 import model.values.BoolValue;
 import model.values.IntValue;
@@ -23,9 +23,9 @@ public class RelationalExp implements Exp {
     }
 
     @Override
-    public Value eval(MyIDictionary<String, Value> tbl) throws MyException {
-        Value v1 = exp1.eval(tbl);
-        Value v2 = exp2.eval(tbl);
+    public Value eval(MyIDictionary<String, Value> tbl, MyIHeap heap) throws MyException {
+        Value v1 = exp1.eval(tbl, heap);
+        Value v2 = exp2.eval(tbl, heap);
 
         if (!(v1.getType().equals(new IntType())))
             throw new OperandNotInteger();

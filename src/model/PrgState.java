@@ -10,14 +10,16 @@ public class PrgState {
     private MyIList<Value> out;
     private final IStmt originalProgram;
     private final MyIFileTable fileTable;
+    private MyIHeap heap;
 
     public PrgState(MyIStack<IStmt> stk, MyIDictionary<String, Value> symtbl, MyIList<Value> ot,
-                    IStmt prg, MyIFileTable ft) {
+                    IStmt prg, MyIFileTable ft, MyIHeap h) {
         this.exeStack = stk;
         this.symTable = symtbl;
         this.out = ot;
         this.originalProgram = prg.deepCopy();
         this.fileTable = ft;
+        this.heap = h;
         exeStack.push(prg);
 
     }
@@ -27,6 +29,7 @@ public class PrgState {
     public MyIList<Value> getOut() { return out; }
     public MyIFileTable getFileTable() { return fileTable; }
     public IStmt getOriginalProgram() { return originalProgram; }
+    public MyIHeap getHeap() { return heap; }
 
     @Override
     public String toString() {
@@ -35,6 +38,7 @@ public class PrgState {
         sb.append("SymTable: ").append(symTable.toString()).append("\n");
         sb.append("Out: ").append(out.toString()).append("\n");
         sb.append("FileTable: ").append(fileTable.toString()).append("\n");
+        sb.append("Heap: ").append(heap.toString()).append("\n");
         return sb.toString();
     }
 

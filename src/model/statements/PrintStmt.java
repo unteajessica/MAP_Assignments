@@ -8,7 +8,7 @@ import model.types.*;
 import exceptions.MyException;
 
 public class PrintStmt implements IStmt {
-    private Exp exp;
+    private final Exp exp;
 
     public PrintStmt(Exp e) {
         exp = e;
@@ -19,7 +19,7 @@ public class PrintStmt implements IStmt {
     }
 
     public PrgState execute(PrgState state) throws MyException {
-        Value val = exp.eval(state.getSymTable());
+        Value val = exp.eval(state.getSymTable(), state.getHeap());
         state.getOut().add(val);
         return state;
     }

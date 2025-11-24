@@ -9,8 +9,8 @@ import model.types.*;
 import exceptions.MyException;
 
 public class AssignStmt implements IStmt {
-    private String id;
-    private Exp exp;
+    private final String id;
+    private final Exp exp;
 
     public AssignStmt(String i, Exp e) {
         id = i;
@@ -22,12 +22,10 @@ public class AssignStmt implements IStmt {
     }
 
     public PrgState execute(PrgState state) throws MyException {
-        MyIStack<IStmt> stack = state.getStack();
         MyIDictionary<String, Value> symTable = state.getSymTable();
 
         if (symTable.isDefined(id)) {
-            Value val = exp.eval(symTable);
-            Type typeId = (symTable.lookup(id)).getType();
+            Value val = exp.eval(symTable, state.getHeap());
             if (!val.getType().equals(symTable.lookup(id).getType())) {
                 throw new TypeMismatch();
             }

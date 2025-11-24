@@ -1,15 +1,16 @@
 package model.expressions;
 
 import model.adt.MyIDictionary;
+import model.adt.MyIHeap;
 import model.values.Value;
 import exceptions.MyException;
 
 public class VarExp implements Exp {
-    private String id;
+    private final String id;
 
     public VarExp(String i) { id = i; }
 
-    public Value eval(MyIDictionary<String, Value> tbl) throws MyException {
+    public Value eval(MyIDictionary<String, Value> tbl, MyIHeap heap) throws MyException {
         return tbl.lookup(id);
     }
 

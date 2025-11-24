@@ -1,19 +1,14 @@
 package view;
 
 import java.util.Arrays;
-import java.util.Scanner;
 import controller.Controller;
 import model.PrgState;
-import model.adt.MyDictionary;
-import model.adt.MyFileTable;
-import model.adt.MyList;
-import model.adt.MyStack;
-import model.expressions.ArithExp;
-import model.expressions.ValueExp;
-import model.expressions.VarExp;
+import model.adt.*;
+import model.expressions.*;
 import model.statements.*;
 import model.types.BoolType;
 import model.types.IntType;
+import model.types.RefType;
 import model.types.StringType;
 import model.values.BoolValue;
 import model.values.IntValue;
@@ -23,11 +18,6 @@ import repository.Repo;
 import model.statements.openRFileStmt;
 import model.statements.readFileStmt;
 import model.statements.closeRFileStmt;
-import view.TextMenu;
-import view.Command;
-import view.ExitCommand;
-import view.RunExample;
-import static java.lang.IO.print;
 
 public class View {
     // example 1:
@@ -93,13 +83,57 @@ public class View {
                 );
     }
 
+    IStmt testHeap() {
+        return new CompStmt(
+                new VarDeclStmt("v", new RefType(new IntType())),                  // Ref int v
+                new CompStmt(
+                        new NewStmt("v", new ValueExp(new IntValue(20))),             // new(v,20)
+                        new CompStmt(
+                                new PrintStmt(new ReadHeapExp(new VarExp("v"))),          // print(rH(v))
+                                new CompStmt(
+                                        new WriteHeapStmt("v", new ValueExp(new IntValue(30))), // wH(v,30)
+                                        new PrintStmt(
+                                                new ArithExp(
+                                                        1,
+                                                        new ReadHeapExp(new VarExp("v")),             // rH(v)
+                                                        new ValueExp(new IntValue(5))                 // +5
+                                                )
+                                        )
+                                )
+                        )
+                )
+        );
+    }
+
+    IStmt testWhile() {
+        return new CompStmt(
+                new VarDeclStmt("v", new IntType()),
+                new CompStmt(
+                        new AssignStmt("v", new ValueExp(new IntValue(4))),
+                        new CompStmt(
+                                new WhileStmt(
+                                        new RelationalExp(new VarExp("v"), new ValueExp(new IntValue(0)), ">"),
+                                        new CompStmt(
+                                                new PrintStmt(new VarExp("v")),
+                                                new AssignStmt("v",
+                                                        new ArithExp(2, new VarExp("v"), new ValueExp(new IntValue(1))))
+                                        )
+                                ),
+                                new PrintStmt(new VarExp("v"))
+                        )
+                )
+        );
+
+    }
+
     private static PrgState prg(IStmt stmt) {
         return new PrgState(
                 new MyStack<>(),
                 new MyDictionary<>(),
                 new MyList<>(),
                 stmt,
-                new MyFileTable()
+                new MyFileTable(),
+                new MyHeap()
         );
     }
 
@@ -128,6 +162,18 @@ public class View {
         IRepo repoTest = new Repo(prgTest, "logTestProgram.txt");
         Controller ctrTest = new Controller(repoTest);
 
+        // --- Test Heap setup
+        IStmt heapProg = new View().testHeap();
+        PrgState prgHeap = prg(heapProg);
+        IRepo repoHeap = new Repo(prgHeap, "logTestHeap.txt");
+        Controller ctrHeap = new Controller(repoHeap);
+
+        // --- Test While setup
+        IStmt whileProg = new View().testWhile();
+        PrgState prgWhile = prg(whileProg);
+        IRepo repoWhile = new Repo(prgWhile, "logTestWhile.txt");
+        Controller ctrWhile = new Controller(repoWhile);
+
         // --- Text menu (PDF)
         TextMenu menu = new TextMenu();
         menu.addCommand(new ExitCommand("0", "exit"));
@@ -137,67 +183,10 @@ public class View {
         menu.addCommand(new RunExample("3", ex3.toString(), ctr3));
         menu.addCommand(new SetDisplayCommand("4", "Change display flag", Arrays.asList(ctr1, ctr2, ctr3)));
         menu.addCommand(new RunExample("5", testProg.toString(), ctrTest));
+        menu.addCommand(new RunExample("6", heapProg.toString(), ctrHeap));
+        menu.addCommand(new RunExample("7", whileProg.toString(), ctrWhile));
 
         menu.show();
     }
-
-    /**
-    public void printMenu() {
-        System.out.println("---MENU---");
-        System.out.println("1. Run example 1");
-        System.out.println("2. Run example 2");
-        System.out.println("3. Run example 3");
-        System.out.println("4. Change display flag (currently on)");
-        System.out.println("5. Run test program");
-        System.out.println("0. Exit");
-    }
-
-    void runExample(IStmt ex, boolean DisplayFlag, String repoFilePath) {
-        PrgState prg = new PrgState(new MyStack<>(), new MyDictionary<>(), new MyList<>(),
-                ex, new MyFileTable());
-        Repo repo = new Repo(repoFilePath);
-        repo.addPrg(prg);
-        Controller ctrl = new Controller(repo);
-        ctrl.setDisplayFlag(DisplayFlag);
-        try {
-            ctrl.allSteps();
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
-        }
-    }
-
-    public void start() {
-        IStmt example1 = example1();
-        IStmt example2 = example2();
-        IStmt example3 = example3();
-        IStmt testProgram = testProgram();
-        boolean displayFlag = true;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter repo file path: ");
-        String repoFilePath = scanner.nextLine();
-
-        while (true) {
-            printMenu();
-            System.out.println("Choose an option: ");
-            int option = scanner.nextInt();
-            if (option == 0) {
-                System.out.println("Exiting...");
-                break;
-            }
-            switch (option) {
-                case 1 -> runExample(example1, displayFlag, repoFilePath);
-                case 2 -> runExample(example2, displayFlag, repoFilePath);
-                case 3 -> runExample(example3, displayFlag, repoFilePath);
-                case 4 -> {
-                    displayFlag = !displayFlag;
-                    System.out.println("Display flag set to: " + displayFlag);
-                }
-                case 5 -> runExample(testProgram, displayFlag, repoFilePath);
-                default -> System.out.println("Invalid option");
-            }
-        }
-        scanner.close();
-    }
-    **/
 
 }
