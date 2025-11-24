@@ -41,7 +41,7 @@ public class Controller implements IController {
         while (!prg.getStack().isEmpty()) {
             oneStep(prg);
 
-            if (displayFlag) System.out.println(prg.toString());
+            if (displayFlag) System.out.println(prg);
 
             // garbage collector
             List<Integer> symTableAddrs = getAddrFromSymTable(prg.getSymTable().getValues());
@@ -54,7 +54,7 @@ public class Controller implements IController {
 
         }
 
-        if (!displayFlag) System.out.println(prg.toString());
+        if (!displayFlag) System.out.println(prg);
     }
 
     public static List<Integer> getAddrFromSymTable(Collection<Value> symTableValues) {
