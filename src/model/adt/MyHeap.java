@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MyHeap implements MyIHeap {
+
     private Map<Integer, Value> heap;
     private int freeLocation;
 

@@ -2,11 +2,13 @@ package model.statements;
 
 import exceptions.FileException;
 import exceptions.MyException;
+import exceptions.TypeMismatch;
 import model.PrgState;
 import model.adt.MyIDictionary;
 import model.adt.MyIFileTable;
 import model.expressions.Exp;
 import model.types.StringType;
+import model.types.Type;
 import model.values.StringValue;
 import model.values.Value;
 
@@ -15,6 +17,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class openRFileStmt implements IStmt{
+
     private final Exp exp;
 
     public openRFileStmt(Exp exp) {
@@ -37,8 +40,9 @@ public class openRFileStmt implements IStmt{
         }
 
         String fileName = ((StringValue) val).getVal();
+
         if (fileTable.isDefined(fileName)) {
-            throw new FileException();
+            throw new FileException(); // file already opened
         }
 
         // open file
@@ -50,13 +54,21 @@ public class openRFileStmt implements IStmt{
         }
 
         System.out.println("Opened file: " + fileName);
-
         return null;
-
     }
 
     @Override
     public IStmt deepCopy() {
         return new openRFileStmt(exp);
+    }
+
+    @Override
+    public MyIDictionary<String, Type> typeCheck(MyIDictionary<String, Type> typeEnv) throws MyException {
+        Type typeExp = exp.typeCheck(typeEnv);
+        if (typeExp.equals(new  StringType())) {
+            return typeEnv;
+        } else {
+            throw new TypeMismatch();
+        }
     }
 }

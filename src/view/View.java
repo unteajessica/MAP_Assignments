@@ -2,14 +2,12 @@ package view;
 
 import java.util.Arrays;
 import controller.Controller;
+import exceptions.MyException;
 import model.PrgState;
 import model.adt.*;
 import model.expressions.*;
 import model.statements.*;
-import model.types.BoolType;
-import model.types.IntType;
-import model.types.RefType;
-import model.types.StringType;
+import model.types.*;
 import model.values.BoolValue;
 import model.values.IntValue;
 import model.values.StringValue;
@@ -54,7 +52,7 @@ public class View {
                                         VarExp("v"))))));
     }
 
-    IStmt testProgram() {
+    private static IStmt testProgram() {
         return
                 new CompStmt(
                         new VarDeclStmt("varf", new StringType()), // string varf
@@ -83,7 +81,7 @@ public class View {
                 );
     }
 
-    IStmt testHeap() {
+    private static IStmt testHeap() {
         return new CompStmt(
                 new VarDeclStmt("v", new RefType(new IntType())),                  // Ref int v
                 new CompStmt(
@@ -105,7 +103,7 @@ public class View {
         );
     }
 
-    IStmt testWhile() {
+    private static IStmt testWhile() {
         return new CompStmt(
                 new VarDeclStmt("v", new IntType()),
                 new CompStmt(
@@ -126,7 +124,7 @@ public class View {
 
     }
 
-    IStmt testGarbageCollector() {
+    private static IStmt testGarbageCollector() {
         return new CompStmt(
                 // Ref int v;
                 new VarDeclStmt("v", new RefType(new IntType())),
@@ -161,7 +159,7 @@ public class View {
     // int v; Ref int a; v=10; new(a,22);
     // fork( wH(a,30); v=32; print(v); print(rH(a)) );
     // print(v); print(rH(a))
-    IStmt testFork() {
+    private static IStmt testFork() {
         return new CompStmt(
                 // int v
                 new VarDeclStmt("v", new IntType()),
@@ -221,66 +219,135 @@ public class View {
     }
 
     public static void main() {
+        TextMenu menu = new TextMenu();
+
         // --- Example 1 setup
         IStmt ex1 = example1();
-        PrgState prg1 = prg(ex1);
-        IRepo repo1 = new Repo(prg1, "log1.txt");   // <- PDF style
-        Controller ctr1 = new Controller(repo1);
+        try {
+            MyIDictionary<String, Type> typeEnv1 = new MyDictionary<>();
+            ex1.typeCheck(typeEnv1);
+
+            PrgState prg1 = prg(ex1);
+            IRepo repo1 = new Repo(prg1, "log1.txt");   // <- PDF style
+            Controller ctr1 = new Controller(repo1);
+
+            Command c1 = new RunExample("1", ex1.toString(), ctr1);
+            menu.addCommand(c1);
+        } catch (MyException e) {
+            System.out.println("Error in example 1: " + e.getMessage());
+        }
 
         // --- Example 2 setup
         IStmt ex2 = example2();
-        PrgState prg2 = prg(ex2);
-        IRepo repo2 = new Repo(prg2, "log2.txt");
-        Controller ctr2 = new Controller(repo2);
+        try {
+            MyIDictionary<String, Type> typeEnv2 = new MyDictionary<>();
+            ex2.typeCheck(typeEnv2);
+
+            PrgState prg2 = prg(ex2);
+            IRepo repo2 = new Repo(prg2, "log2.txt");
+            Controller ctr2 = new Controller(repo2);
+
+            Command c2 = new RunExample("2", ex2.toString(), ctr2);
+            menu.addCommand(c2);
+        } catch (MyException e) {
+            System.out.println("Error in example 2: " + e.getMessage());
+        }
 
         // --- Example 3 setup
         IStmt ex3 = example3();
-        PrgState prg3 = prg(ex3);
-        IRepo repo3 = new Repo(prg3, "log3.txt");
-        Controller ctr3 = new Controller(repo3);
+        try {
+            MyIDictionary<String, Type> typeEnv3 = new MyDictionary<>();
+            ex3.typeCheck(typeEnv3);
+
+            PrgState prg3 = prg(ex3);
+            IRepo repo3 = new Repo(prg3, "log3.txt");
+            Controller ctr3 = new Controller(repo3);
+
+            Command c3 = new RunExample("3", ex3.toString(), ctr3);
+            menu.addCommand(c3);
+        } catch (MyException e) {
+            System.out.println("Error in example 3: " + e.getMessage());
+        }
 
         // --- Test Program setup
-        IStmt testProg = new View().testProgram();
-        PrgState prgTest = prg(testProg);
-        IRepo repoTest = new Repo(prgTest, "logTestProgram.txt");
-        Controller ctrTest = new Controller(repoTest);
+        IStmt testProg = testProgram();
+        try {
+            MyIDictionary<String, Type> typeEnv4 = new MyDictionary<>();
+            testProg.typeCheck(typeEnv4);
+
+            PrgState prgTest = prg(testProg);
+            IRepo repoTest = new Repo(prgTest, "logTestProgram.txt");
+            Controller ctrTest = new Controller(repoTest);
+
+            Command c4 = new RunExample("4", testProg.toString(), ctrTest);
+            menu.addCommand(c4);
+        } catch (MyException e) {
+            System.out.println("Error in example 4: " + e.getMessage());
+        }
 
         // --- Test Heap setup
-        IStmt heapProg = new View().testHeap();
-        PrgState prgHeap = prg(heapProg);
-        IRepo repoHeap = new Repo(prgHeap, "logTestHeap.txt");
-        Controller ctrHeap = new Controller(repoHeap);
+        IStmt heapProg = testHeap();
+        try {
+            MyIDictionary<String, Type> typeEnv5 = new MyDictionary<>();
+            heapProg.typeCheck(typeEnv5);
+
+            PrgState prgHeap = prg(heapProg);
+            IRepo repoHeap = new Repo(prgHeap, "logTestHeap.txt");
+            Controller ctrHeap = new Controller(repoHeap);
+
+            Command c5 = new RunExample("5", heapProg.toString(), ctrHeap);
+            menu.addCommand(c5);
+        } catch (MyException e) {
+            System.out.println("Error in example 5: " + e.getMessage());
+        }
 
         // --- Test While setup
-        IStmt whileProg = new View().testWhile();
-        PrgState prgWhile = prg(whileProg);
-        IRepo repoWhile = new Repo(prgWhile, "logTestWhile.txt");
-        Controller ctrWhile = new Controller(repoWhile);
+        IStmt whileProg = testWhile();
+        try {
+            MyIDictionary<String, Type> typeEnv6 = new MyDictionary<>();
+            whileProg.typeCheck(typeEnv6);
+
+            PrgState prgWhile = prg(whileProg);
+            IRepo repoWhile = new Repo(prgWhile, "logTestWhile.txt");
+            Controller ctrWhile = new Controller(repoWhile);
+
+            Command c6 = new RunExample("6", whileProg.toString(), ctrWhile);
+            menu.addCommand(c6);
+        } catch (MyException e) {
+            System.out.println("Error in example 6: " + e.getMessage());
+        }
 
         // --- Test Garbage Collector
-        IStmt garbageCollectorProg = new View().testGarbageCollector();
-        PrgState prgGarbageCollector = prg(garbageCollectorProg);
-        IRepo repoGarbageCollector = new Repo(prgGarbageCollector, "logGarbageCollector.txt");
-        Controller ctrGarbageCollector = new Controller(repoGarbageCollector);
+        IStmt garbageCollectorProg = testGarbageCollector();
+        try {
+            MyIDictionary<String, Type> typeEnv7 = new MyDictionary<>();
+            garbageCollectorProg.typeCheck(typeEnv7);
+
+            PrgState prgGarbageCollector = prg(garbageCollectorProg);
+            IRepo repoGarbageCollector = new Repo(prgGarbageCollector, "logGarbageCollector.txt");
+            Controller ctrGarbageCollector = new Controller(repoGarbageCollector);
+
+            Command c7 = new RunExample("7", garbageCollectorProg.toString(), ctrGarbageCollector);
+            menu.addCommand(c7);
+        } catch (MyException e) {
+            System.out.println("Error in example 7: " + e.getMessage());
+        }
 
         // --- Test Fork setup
-        IStmt forkProg = new View().testFork();
-        PrgState prgFork = prg(forkProg);
-        IRepo repoFork = new Repo(prgFork, "logTestFork.txt");
-        Controller ctrFork = new Controller(repoFork);
+        IStmt forkProg = testFork();
+        try {
+            MyIDictionary<String, Type> typeEnv8 = new MyDictionary<>();
+            forkProg.typeCheck(typeEnv8);
 
-        // --- Text menu (PDF)
-        TextMenu menu = new TextMenu();
-        menu.addCommand(new ExitCommand("0", "exit"));
-        menu.addCommand(new RunExample("1", ex1.toString(), ctr1));
-        menu.addCommand(new RunExample("2", ex2.toString(), ctr2));
-        menu.addCommand(new RunExample("3", ex3.toString(), ctr3));
-        menu.addCommand(new SetDisplayCommand("4", "Change display flag", Arrays.asList(ctr1, ctr2, ctr3)));
-        menu.addCommand(new RunExample("5", testProg.toString(), ctrTest));
-        menu.addCommand(new RunExample("6", heapProg.toString(), ctrHeap));
-        menu.addCommand(new RunExample("7", whileProg.toString(), ctrWhile));
-        menu.addCommand(new  RunExample("8", garbageCollectorProg.toString(), ctrGarbageCollector));
-        menu.addCommand(new  RunExample("9", forkProg.toString(), ctrFork));
+            PrgState prgFork = prg(forkProg);
+            IRepo repoFork = new Repo(prgFork, "logTestFork.txt");
+            Controller ctrFork = new Controller(repoFork);
+
+            Command c8 = new RunExample("8", forkProg.toString(), ctrFork);
+            menu.addCommand(c8);
+        } catch (MyException e) {
+            System.out.println("Error in example 8: " + e.getMessage());
+        }
 
         menu.show();
     }

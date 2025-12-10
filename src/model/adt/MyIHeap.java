@@ -11,4 +11,5 @@ public interface MyIHeap {
     void update(Integer key, Value value);
     Map<Integer, Value> getHeap();
     void setHeap(Map<Integer, Value> newHeap);
+    String toString();
 }

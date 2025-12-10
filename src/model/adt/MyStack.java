@@ -1,14 +1,32 @@
 package model.adt;
-import exceptions.StackIsEmpty;
 
+import exceptions.StackIsEmpty;
 import java.util.Stack;
 
 public class MyStack<T> implements MyIStack<T> {
-    private Stack<T> stack = new Stack<>();
+
+    private final Stack<T> stack = new Stack<>();
+
+    @Override
     public T pop() {
-        if (stack.isEmpty()) throw new StackIsEmpty();
-        return stack.pop(); }
-    public void push(T elem) { stack.push(elem); }
-    public boolean isEmpty() { return stack.isEmpty(); }
-    public String toString() { return stack.toString(); }
+        if (stack.isEmpty()) {
+            throw new StackIsEmpty();
+        }
+        return stack.pop();
+    }
+
+    @Override
+    public void push(T elem) {
+        stack.push(elem);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return stack.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return stack.toString();
+    }
 }

@@ -4,5 +4,5 @@ import model.types.Type;
 public interface Value {
     Type getType();
     String toString();
-    public boolean equals(Object o);
+    boolean equals(Object o);
 }

@@ -3,9 +3,9 @@ package model.adt;
 import java.io.BufferedReader;
 
 public interface MyIFileTable {
-    public void put(String filename, BufferedReader fileDescriptor);
-    public BufferedReader lookup(String filename);
-    public boolean isDefined(String filename);
-    public void remove(String filename);
-    public String toString();
+    void put(String filename, BufferedReader fileDescriptor);
+    BufferedReader lookup(String filename);
+    boolean isDefined(String filename);
+    void remove(String filename);
+    String toString();
 }

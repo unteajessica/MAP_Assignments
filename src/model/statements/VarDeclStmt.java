@@ -1,22 +1,23 @@
 package model.statements;
 
+import exceptions.MyException;
 import exceptions.VariableAlreadyDefined;
 import model.PrgState;
-import model.adt.*;
-import model.expressions.*;
-import model.values.*;
-import model.types.*;
-import exceptions.MyException;
+import model.adt.MyIDictionary;
+import model.types.Type;
+import model.values.Value;
 
 public class VarDeclStmt implements IStmt {
-    private String name;
-    private Type type;
+
+    private final String name;
+    private final Type type;
 
     public VarDeclStmt(String n, Type t) {
         name = n;
         type = t;
     }
 
+    @Override
     public PrgState execute(PrgState state) throws MyException {
         MyIDictionary<String, Value> symTable = state.getSymTable();
 
@@ -28,6 +29,7 @@ public class VarDeclStmt implements IStmt {
         return null;
     }
 
+    @Override
     public String toString() {
         return type + " " + name;
     }
@@ -35,5 +37,11 @@ public class VarDeclStmt implements IStmt {
     @Override
     public IStmt deepCopy() {
         return new VarDeclStmt(name, type);
+    }
+
+    @Override
+    public MyIDictionary<String, Type> typeCheck(MyIDictionary<String, Type> typeEnv) throws MyException {
+        typeEnv.put(name, type);
+        return typeEnv;
     }
 }

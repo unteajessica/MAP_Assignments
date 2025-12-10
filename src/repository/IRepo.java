@@ -1,8 +1,8 @@
 package repository;
+
 import model.PrgState;
 import exceptions.MyException;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface IRepo {

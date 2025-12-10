@@ -1,14 +1,15 @@
 package model.statements;
 
 import exceptions.TypeMismatch;
-import model.PrgState;
-import model.adt.*;
-import model.expressions.*;
-import model.values.*;
-import model.types.*;
 import exceptions.MyException;
+import model.PrgState;
+import model.adt.MyIDictionary;
+import model.expressions.Exp;
+import model.types.Type;
+import model.values.Value;
 
 public class AssignStmt implements IStmt {
+
     private final String id;
     private final Exp exp;
 
@@ -17,10 +18,12 @@ public class AssignStmt implements IStmt {
         exp = e;
     }
 
+    @Override
     public String toString() {
         return id + "=" + exp.toString();
     }
 
+    @Override
     public PrgState execute(PrgState state) throws MyException {
         MyIDictionary<String, Value> symTable = state.getSymTable();
 
@@ -33,12 +36,24 @@ public class AssignStmt implements IStmt {
                 symTable.update(id, val);
             }
         }
-
+        // if not defined, do nothing
         return null;
     }
 
     @Override
     public IStmt deepCopy() {
         return new AssignStmt(id, exp.deepCopy());
+    }
+
+    @Override
+    public MyIDictionary<String, Type> typeCheck(MyIDictionary<String, Type> typeEnv) throws MyException {
+        Type typeVar = typeEnv.lookup(id);
+        Type typeExp = exp.typeCheck(typeEnv);
+        if (typeVar.equals(typeExp)) {
+            return typeEnv;
+        }
+        else {
+            throw new TypeMismatch();
+        }
     }
 }

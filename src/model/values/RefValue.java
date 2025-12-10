@@ -4,8 +4,11 @@ import model.types.RefType;
 import model.types.Type;
 
 public class RefValue implements  Value {
-    int address;
-    Type locationType;
+
+    // the address in the heap -> int
+    private final int address;
+    // what type of value is stored at that address
+    private final Type locationType;
 
     public RefValue(int address, Type locationType) {
         this.address = address;

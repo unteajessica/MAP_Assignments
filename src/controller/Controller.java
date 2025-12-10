@@ -1,4 +1,5 @@
 package controller;
+
 import model.PrgState;
 import exceptions.MyException;
 import model.values.RefValue;
@@ -13,9 +14,10 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class Controller implements IController {
+
     private final IRepo repo;
     private boolean displayFlag;
-    private ExecutorService executor;
+    private ExecutorService executor;   // java thread pool
 
     public Controller(IRepo repo) {
         this.repo = repo;
@@ -28,23 +30,28 @@ public class Controller implements IController {
     @Override
     public boolean getDisplayFlag() { return displayFlag; }
 
+    private void runGarbageCollector(List<PrgState> prgList) {
+        // collect all addresses from all symbol tables
+        List<Integer> symTableAddr = getAddrFromAllSymTables(prgList);
+
+        // get the shared heap
+        Map<Integer, Value> heap = prgList.getFirst().getHeap().getHeap();
+
+        // compute the new heap after garbage collection
+        Map<Integer, Value> newHeap = safeGarbageCollector(symTableAddr, heap);
+
+        // update the heap in all PrgStates
+        prgList.forEach(prg -> prg.getHeap().setHeap(newHeap));
+    }
+
     @Override
     public void allSteps() {
         executor = Executors.newFixedThreadPool(2);
+
         // remove completed programs
         List<PrgState> prgList = removeCompletedPrg(repo.getProgramsList());
         while (!prgList.isEmpty()) {
-            // collect all addresses from all symbol tables
-            List<Integer> symTableAddr = getAddrFromAllSymTables(prgList);
-
-            // get the shared heap
-            Map<Integer, Value> heap = prgList.getFirst().getHeap().getHeap();
-
-            // compute the new heap after garbage collection
-            Map<Integer, Value> newHeap = safeGarbageCollector(symTableAddr, heap);
-
-            // update the heap in all PrgStates
-            prgList.forEach(prg -> prg.getHeap().setHeap(newHeap));
+            runGarbageCollector(prgList);
 
             try {
                 oneStepForAllPrg(prgList);
@@ -81,7 +88,6 @@ public class Controller implements IController {
                                                            Map<Integer, Value> heap) {
         // list of heap addresses that are directly referenced in the symbol table
         List<Integer> reachable = new ArrayList<>(symTableAddrs);
-
         boolean changed;
 
         do {
@@ -115,7 +121,8 @@ public class Controller implements IController {
                 .collect(Collectors.toList());
     }
 
-    private void oneStepForAllPrg(List<PrgState> prgList) throws MyException, IOException, InterruptedException {
+    private void oneStepForAllPrg(List<PrgState> prgList)
+            throws MyException, IOException, InterruptedException {
         // before the execution, print the PrgState List into the log file
         prgList.forEach(repo::logPrgStateExec);
 

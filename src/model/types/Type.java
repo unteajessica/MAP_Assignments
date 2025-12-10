@@ -3,7 +3,7 @@ package model.types;
 import model.values.Value;
 
 public interface Type {
-    public boolean equals(Object o);
-    public String toString();
+    boolean equals(Object o);
+    String toString();
     Value defaultValue();
 }

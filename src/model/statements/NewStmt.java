@@ -1,18 +1,17 @@
 package model.statements;
 
-import exceptions.MyException;
-import exceptions.TypeMismatch;
-import exceptions.ValueTypeError;
-import exceptions.VariableNotDefined;
+import exceptions.*;
 import model.PrgState;
 import model.adt.MyIDictionary;
 import model.adt.MyIHeap;
 import model.expressions.Exp;
 import model.types.RefType;
+import model.types.Type;
 import model.values.RefValue;
 import model.values.Value;
 
 public class NewStmt implements IStmt {
+
     private final String varName;
     private final Exp exp;
 
@@ -22,8 +21,7 @@ public class NewStmt implements IStmt {
     }
 
     @Override
-    public PrgState execute(PrgState state) {
-        // Implementation goes here
+    public PrgState execute(PrgState state) throws MyException {
         MyIDictionary<String, Value> symTable = state.getSymTable();
         MyIHeap heap = state.getHeap();
 
@@ -63,5 +61,16 @@ public class NewStmt implements IStmt {
     @Override
     public String toString() {
         return "new(" + varName + ", " + exp.toString() + ")";
+    }
+
+    @Override
+    public MyIDictionary<String, Type> typeCheck(MyIDictionary<String, Type> typeEnv) throws MyException {
+        Type typeVar = typeEnv.lookup(varName);
+        Type typeExp = exp.typeCheck(typeEnv);
+        if (typeVar.equals(new RefType(typeExp))) {
+            return typeEnv;
+        } else {
+            throw new TypeMismatch();
+        }
     }
 }

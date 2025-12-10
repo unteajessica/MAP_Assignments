@@ -1,9 +1,11 @@
 package model.adt;
+
+import java.io.BufferedReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.BufferedReader;
 
 public class MyFileTable implements MyIFileTable {
+
     private final Map<String, BufferedReader> fileTable = new HashMap<>();
 
     @Override
@@ -26,20 +28,23 @@ public class MyFileTable implements MyIFileTable {
         fileTable.remove(filename);
     }
 
+    // not in the interface, but useful internally / in controller
     public Map<String, BufferedReader> getContent() {
         return fileTable;
     }
 
     @Override
     public String toString() {
-        if (fileTable.isEmpty())
+        if (fileTable.isEmpty()) {
             return "{}";
+        }
+
         StringBuilder sb = new StringBuilder();
         for (String filename : fileTable.keySet()) {
-            sb.append(filename); //.append(" -> ").append(fileTable.get(filename).toString()).append("\n");
+            sb.append(filename);
+            // you could also append " -> " + descriptor if you want
+            // sb.append(" -> ").append(fileTable.get(filename)).append("\n");
         }
         return sb.toString();
     }
-
-
 }

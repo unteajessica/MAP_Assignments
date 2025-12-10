@@ -1,9 +1,11 @@
 package model.types;
 
 import model.values.Value;
+import model.values.RefValue;
 
-public class RefType implements Type{
-    Type inner;
+public class RefType implements Type {
+
+    private final Type inner;
 
     public RefType(Type inner) {
         this.inner = inner;
@@ -25,6 +27,6 @@ public class RefType implements Type{
 
     @Override
     public Value defaultValue() {
-        return new model.values.RefValue(0, inner);
+        return new RefValue(0, inner);
     }
 }

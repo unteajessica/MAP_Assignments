@@ -1,10 +1,13 @@
 package model.expressions;
+
 import exceptions.MyException;
-import model.adt.MyIHeap;
-import model.values.Value;
 import model.adt.MyIDictionary;
+import model.adt.MyIHeap;
+import model.types.Type;
+import model.values.Value;
 
 public interface Exp {
     Value eval(MyIDictionary<String, Value> tbl, MyIHeap heap) throws MyException;
     Exp deepCopy();
+    Type typeCheck(MyIDictionary<String, Type> typeEnv) throws MyException;
 }

@@ -1,7 +1,8 @@
 package view;
 
 public abstract class Command {
-private String key, description;
+
+    private final String key, description;
 
     public Command(String k, String d) {
         key = k;

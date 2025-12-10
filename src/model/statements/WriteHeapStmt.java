@@ -5,11 +5,13 @@ import model.PrgState;
 import model.adt.MyIDictionary;
 import model.adt.MyIHeap;
 import model.expressions.Exp;
+import model.types.RefType;
 import model.types.Type;
 import model.values.RefValue;
 import model.values.Value;
 
 public class WriteHeapStmt implements IStmt {
+
     private final String varName;
     private final Exp exp;
 
@@ -23,14 +25,14 @@ public class WriteHeapStmt implements IStmt {
         MyIDictionary<String, Value> symTable = state.getSymTable();
         MyIHeap heap = state.getHeap();
 
-        // var must exist
+        // 1. var must exist
         if (!symTable.isDefined(varName)) {
             throw new VariableNotDefined();
         }
 
         Value varValue = symTable.lookup(varName);
 
-        // var must be a RefValue
+        // 2. var must be a RefValue
         if (!(varValue instanceof RefValue)) {
             throw new ValueTypeError();
         }
@@ -38,21 +40,21 @@ public class WriteHeapStmt implements IStmt {
         RefValue refValue = (RefValue) varValue;
         int address = refValue.getAddress();
 
-        // address must exist in heap
+        // 3. address must exist in heap
         if (!heap.containsKey(address)) {
             throw new AddressNotDefined();
         }
 
-        // evaluate expression
+        // 4. evaluate expression
         Value evaluated = exp.eval(symTable, heap);
 
-        // types must match
+        // 5. types must match
         Type locationType = refValue.getLocationType();
         if (!evaluated.getType().equals(locationType)) {
             throw new TypeMismatch();
         }
 
-        // update heap
+        // 6. update heap
         heap.update(address, evaluated);
 
         return null;
@@ -66,5 +68,17 @@ public class WriteHeapStmt implements IStmt {
     @Override
     public String toString() {
         return "wH(" + varName + ", " + exp.toString() + ")";
+    }
+
+    @Override
+    public MyIDictionary<String, Type> typeCheck(MyIDictionary<String, Type> typeEnv) throws MyException {
+        Type varType = typeEnv.lookup(varName);
+        Type expType = exp.typeCheck(typeEnv);
+
+        if (varType.equals(new RefType(expType))) {
+            return typeEnv;
+        } else {
+            throw new TypeMismatch();
+        }
     }
 }
