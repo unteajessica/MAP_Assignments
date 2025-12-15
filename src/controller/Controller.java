@@ -24,6 +24,10 @@ public class Controller implements IController {
         this.displayFlag = true;
     }
 
+    public IRepo getRepo() {
+        return repo;
+    }
+
     @Override
     public void setDisplayFlag(boolean b) { displayFlag = b; }
 
@@ -121,8 +125,16 @@ public class Controller implements IController {
                 .collect(Collectors.toList());
     }
 
-    private void oneStepForAllPrg(List<PrgState> prgList)
+    private void ensureExecutor() {
+        if (executor == null || executor.isShutdown() || executor.isTerminated()) {
+            executor = Executors.newFixedThreadPool(2);
+        }
+    }
+
+    public void oneStepForAllPrg(List<PrgState> prgList)
             throws MyException, IOException, InterruptedException {
+        ensureExecutor();
+
         // before the execution, print the PrgState List into the log file
         prgList.forEach(repo::logPrgStateExec);
 
@@ -152,6 +164,10 @@ public class Controller implements IController {
 
         // save the current programs in the repository
         repo.setProgramsList(prgList);
+    }
+
+    public int countPrgStates() {
+        return repo.getProgramsList().size();
     }
 
 }

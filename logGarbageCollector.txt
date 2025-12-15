@@ -1,0 +1,176 @@
+Program ID: 7
+ExeStack: [(Ref(int) v;(new(v, 20);(Ref(Ref(int)) a;(new(a, v);(new(v, 30);print(rH(rH(a))))))))]
+SymTable: {}
+Out: []
+FileTable: {}
+Heap: {}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(v, 20);(Ref(Ref(int)) a;(new(a, v);(new(v, 30);print(rH(rH(a))))))), Ref(int) v]
+SymTable: {}
+Out: []
+FileTable: {}
+Heap: {}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(v, 20);(Ref(Ref(int)) a;(new(a, v);(new(v, 30);print(rH(rH(a))))))), Ref(int) v]
+SymTable: {}
+Out: []
+FileTable: {}
+Heap: {}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(v, 20);(Ref(Ref(int)) a;(new(a, v);(new(v, 30);print(rH(rH(a)))))))]
+SymTable: {v=RefValue(0, int)}
+Out: []
+FileTable: {}
+Heap: {}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(v, 20);(Ref(Ref(int)) a;(new(a, v);(new(v, 30);print(rH(rH(a)))))))]
+SymTable: {v=RefValue(0, int)}
+Out: []
+FileTable: {}
+Heap: {}
+
+===============================================
+Program ID: 7
+ExeStack: [(Ref(Ref(int)) a;(new(a, v);(new(v, 30);print(rH(rH(a)))))), new(v, 20)]
+SymTable: {v=RefValue(0, int)}
+Out: []
+FileTable: {}
+Heap: {}
+
+===============================================
+Program ID: 7
+ExeStack: [(Ref(Ref(int)) a;(new(a, v);(new(v, 30);print(rH(rH(a)))))), new(v, 20)]
+SymTable: {v=RefValue(0, int)}
+Out: []
+FileTable: {}
+Heap: {}
+
+===============================================
+Program ID: 7
+ExeStack: [(Ref(Ref(int)) a;(new(a, v);(new(v, 30);print(rH(rH(a))))))]
+SymTable: {v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20}
+
+===============================================
+Program ID: 7
+ExeStack: [(Ref(Ref(int)) a;(new(a, v);(new(v, 30);print(rH(rH(a))))))]
+SymTable: {v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(a, v);(new(v, 30);print(rH(rH(a))))), Ref(Ref(int)) a]
+SymTable: {v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(a, v);(new(v, 30);print(rH(rH(a))))), Ref(Ref(int)) a]
+SymTable: {v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(a, v);(new(v, 30);print(rH(rH(a)))))]
+SymTable: {a=RefValue(0, Ref(int)), v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(a, v);(new(v, 30);print(rH(rH(a)))))]
+SymTable: {a=RefValue(0, Ref(int)), v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(v, 30);print(rH(rH(a)))), new(a, v)]
+SymTable: {a=RefValue(0, Ref(int)), v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(v, 30);print(rH(rH(a)))), new(a, v)]
+SymTable: {a=RefValue(0, Ref(int)), v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(v, 30);print(rH(rH(a))))]
+SymTable: {a=RefValue(2, Ref(int)), v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20, 2=RefValue(1, int)}
+
+===============================================
+Program ID: 7
+ExeStack: [(new(v, 30);print(rH(rH(a))))]
+SymTable: {a=RefValue(2, Ref(int)), v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20, 2=RefValue(1, int)}
+
+===============================================
+Program ID: 7
+ExeStack: [print(rH(rH(a))), new(v, 30)]
+SymTable: {a=RefValue(2, Ref(int)), v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20, 2=RefValue(1, int)}
+
+===============================================
+Program ID: 7
+ExeStack: [print(rH(rH(a))), new(v, 30)]
+SymTable: {a=RefValue(2, Ref(int)), v=RefValue(1, int)}
+Out: []
+FileTable: {}
+Heap: {1=20, 2=RefValue(1, int)}
+
+===============================================
+Program ID: 7
+ExeStack: [print(rH(rH(a)))]
+SymTable: {a=RefValue(2, Ref(int)), v=RefValue(3, int)}
+Out: []
+FileTable: {}
+Heap: {1=20, 2=RefValue(1, int), 3=30}
+
+===============================================
+Program ID: 7
+ExeStack: [print(rH(rH(a)))]
+SymTable: {a=RefValue(2, Ref(int)), v=RefValue(3, int)}
+Out: []
+FileTable: {}
+Heap: {1=20, 2=RefValue(1, int), 3=30}
+
+===============================================
+Program ID: 7
+ExeStack: []
+SymTable: {a=RefValue(2, Ref(int)), v=RefValue(3, int)}
+Out: [20]
+FileTable: {}
+Heap: {1=20, 2=RefValue(1, int), 3=30}
+
+===============================================

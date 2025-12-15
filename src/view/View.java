@@ -1,6 +1,5 @@
 package view;
 
-import java.util.Arrays;
 import controller.Controller;
 import exceptions.MyException;
 import model.PrgState;
@@ -8,204 +7,10 @@ import model.adt.*;
 import model.expressions.*;
 import model.statements.*;
 import model.types.*;
-import model.values.BoolValue;
-import model.values.IntValue;
-import model.values.StringValue;
 import repository.IRepo;
 import repository.Repo;
-import model.statements.openRFileStmt;
-import model.statements.readFileStmt;
-import model.statements.closeRFileStmt;
 
 public class View {
-    // example 1:
-    // int v; v=2; Print(v)
-    private static IStmt example1() {
-        return new CompStmt(
-                new VarDeclStmt("v", new IntType()),
-                new CompStmt(
-                        new AssignStmt("v", new ValueExp(new IntValue(2))),
-                        new PrintStmt(new VarExp("v"))
-                )
-        );
-    }
-
-    // example 2:
-    // int a; int b; a=2+3*5; b=a+1; Print(b)
-    private static IStmt example2() {
-        return new CompStmt(new VarDeclStmt("a", new IntType()),
-                new CompStmt(new VarDeclStmt("b", new IntType()),
-                        new CompStmt(new AssignStmt("a", new ArithExp(1,new ValueExp(new IntValue(2)),new
-                                ArithExp(3,new ValueExp(new IntValue(3)), new ValueExp(new IntValue(5))))),
-                                new CompStmt(new AssignStmt("b",new ArithExp(1,new VarExp("a"), new ValueExp(new
-                                        IntValue(1)))), new PrintStmt(new VarExp("b"))))));
-    }
-
-    // example 3:
-    // bool a; int v; a=true; if (a) then v=2 else v=3; Print(v)
-    private static IStmt example3() {
-        return new CompStmt(new VarDeclStmt("a",new BoolType()),
-                new CompStmt(new VarDeclStmt("v", new IntType()),
-                        new CompStmt(new AssignStmt("a", new ValueExp(new BoolValue(true))),
-                                new CompStmt(new IfStmt(new VarExp("a"),new AssignStmt("v",new ValueExp(new
-                                        IntValue(2))), new AssignStmt("v", new ValueExp(new IntValue(3)))), new PrintStmt(new
-                                        VarExp("v"))))));
-    }
-
-    private static IStmt testProgram() {
-        return
-                new CompStmt(
-                        new VarDeclStmt("varf", new StringType()), // string varf
-                        new CompStmt(
-                                new AssignStmt("varf", new ValueExp(new StringValue("test.in"))), //
-                                new CompStmt(
-                                        new openRFileStmt(new VarExp("varf")), // openRFile(varf)
-                                        new CompStmt(
-                                                new VarDeclStmt("var", new IntType()), // int var
-                                                new CompStmt(
-                                                        new readFileStmt(new VarExp("varf"), "var"), // readFile(varf, var)
-                                                        new CompStmt(
-                                                                new PrintStmt(new VarExp("var")), // print(var)
-                                                                new CompStmt(
-                                                                        new readFileStmt(new VarExp("varf"), "var"),
-                                                                        new CompStmt(// readFile(varf, var)
-                                                                            new PrintStmt(new VarExp("var")),
-                                                                                new closeRFileStmt(new VarExp("varf"))// print(var)
-                                                                        )
-                                                                )
-                                                        )
-                                                )
-                                        )
-                                )
-                        )
-                );
-    }
-
-    private static IStmt testHeap() {
-        return new CompStmt(
-                new VarDeclStmt("v", new RefType(new IntType())),                  // Ref int v
-                new CompStmt(
-                        new NewStmt("v", new ValueExp(new IntValue(20))),             // new(v,20)
-                        new CompStmt(
-                                new PrintStmt(new ReadHeapExp(new VarExp("v"))),          // print(rH(v))
-                                new CompStmt(
-                                        new WriteHeapStmt("v", new ValueExp(new IntValue(30))), // wH(v,30)
-                                        new PrintStmt(
-                                                new ArithExp(
-                                                        1,
-                                                        new ReadHeapExp(new VarExp("v")),             // rH(v)
-                                                        new ValueExp(new IntValue(5))                 // +5
-                                                )
-                                        )
-                                )
-                        )
-                )
-        );
-    }
-
-    private static IStmt testWhile() {
-        return new CompStmt(
-                new VarDeclStmt("v", new IntType()),
-                new CompStmt(
-                        new AssignStmt("v", new ValueExp(new IntValue(4))),
-                        new CompStmt(
-                                new WhileStmt(
-                                        new RelationalExp(new VarExp("v"), new ValueExp(new IntValue(0)), ">"),
-                                        new CompStmt(
-                                                new PrintStmt(new VarExp("v")),
-                                                new AssignStmt("v",
-                                                        new ArithExp(2, new VarExp("v"), new ValueExp(new IntValue(1))))
-                                        )
-                                ),
-                                new PrintStmt(new VarExp("v"))
-                        )
-                )
-        );
-
-    }
-
-    private static IStmt testGarbageCollector() {
-        return new CompStmt(
-                // Ref int v;
-                new VarDeclStmt("v", new RefType(new IntType())),
-                new CompStmt(
-                        // new(v, 20);
-                        new NewStmt("v", new ValueExp(new IntValue(20))),
-                        new CompStmt(
-                                // Ref Ref int a;
-                                new VarDeclStmt("a", new RefType(new RefType(new IntType()))),
-                                new CompStmt(
-                                        // new(a, v);
-                                        new NewStmt("a", new VarExp("v")),
-                                        new CompStmt(
-                                                // new(v, 30);
-                                                new NewStmt("v", new ValueExp(new IntValue(30))),
-                                                // print(rH(rH(a)));
-                                                new PrintStmt(
-                                                        new ReadHeapExp(        // rH( … )
-                                                                new ReadHeapExp( // rH(a)
-                                                                        new VarExp("a")
-                                                                )
-                                                        )
-                                                )
-                                        )
-                                )
-                        )
-                )
-        );
-    }
-
-    // fork example
-    // int v; Ref int a; v=10; new(a,22);
-    // fork( wH(a,30); v=32; print(v); print(rH(a)) );
-    // print(v); print(rH(a))
-    private static IStmt testFork() {
-        return new CompStmt(
-                // int v
-                new VarDeclStmt("v", new IntType()),
-                new CompStmt(
-                        // Ref int a
-                        new VarDeclStmt("a", new RefType(new IntType())),
-                        new CompStmt(
-                                // v = 10
-                                new AssignStmt("v", new ValueExp(new IntValue(10))),
-                                new CompStmt(
-                                        // new(a,22)
-                                        new NewStmt("a", new ValueExp(new IntValue(22))),
-                                        new CompStmt(
-                                                // fork(wH(a,30); v=32; print(v); print(rH(a)))
-                                                new ForkStmt(
-                                                        new CompStmt(
-                                                                new WriteHeapStmt("a", new ValueExp(new IntValue(30))),
-                                                                new CompStmt(
-                                                                        new AssignStmt("v", new ValueExp(new IntValue(32))),
-                                                                        new CompStmt(
-                                                                                new PrintStmt(new VarExp("v")),
-                                                                                new PrintStmt(
-                                                                                        new ReadHeapExp(
-                                                                                                new VarExp("a")
-                                                                                        )
-                                                                                )
-                                                                        )
-                                                                )
-                                                        )
-                                                ),
-                                                // print(v); print(rH(a))
-                                                new CompStmt(
-                                                        new PrintStmt(new VarExp("v")),
-                                                        new PrintStmt(
-                                                                new ReadHeapExp(
-                                                                        new VarExp("a")
-                                                                )
-                                                        )
-                                                )
-                                        )
-
-                                )
-                        )
-                )
-        );
-    }
 
     private static PrgState prg(IStmt stmt) {
         return new PrgState(
@@ -222,7 +27,7 @@ public class View {
         TextMenu menu = new TextMenu();
 
         // --- Example 1 setup
-        IStmt ex1 = example1();
+        IStmt ex1 = Examples.example1();
         try {
             MyIDictionary<String, Type> typeEnv1 = new MyDictionary<>();
             ex1.typeCheck(typeEnv1);
@@ -238,7 +43,7 @@ public class View {
         }
 
         // --- Example 2 setup
-        IStmt ex2 = example2();
+        IStmt ex2 = Examples.example2();
         try {
             MyIDictionary<String, Type> typeEnv2 = new MyDictionary<>();
             ex2.typeCheck(typeEnv2);
@@ -254,7 +59,7 @@ public class View {
         }
 
         // --- Example 3 setup
-        IStmt ex3 = example3();
+        IStmt ex3 = Examples.example3();
         try {
             MyIDictionary<String, Type> typeEnv3 = new MyDictionary<>();
             ex3.typeCheck(typeEnv3);
@@ -270,7 +75,7 @@ public class View {
         }
 
         // --- Test Program setup
-        IStmt testProg = testProgram();
+        IStmt testProg = Examples.testProgram();
         try {
             MyIDictionary<String, Type> typeEnv4 = new MyDictionary<>();
             testProg.typeCheck(typeEnv4);
@@ -286,7 +91,7 @@ public class View {
         }
 
         // --- Test Heap setup
-        IStmt heapProg = testHeap();
+        IStmt heapProg = Examples.testHeap();
         try {
             MyIDictionary<String, Type> typeEnv5 = new MyDictionary<>();
             heapProg.typeCheck(typeEnv5);
@@ -302,7 +107,7 @@ public class View {
         }
 
         // --- Test While setup
-        IStmt whileProg = testWhile();
+        IStmt whileProg = Examples.testWhile();
         try {
             MyIDictionary<String, Type> typeEnv6 = new MyDictionary<>();
             whileProg.typeCheck(typeEnv6);
@@ -318,7 +123,7 @@ public class View {
         }
 
         // --- Test Garbage Collector
-        IStmt garbageCollectorProg = testGarbageCollector();
+        IStmt garbageCollectorProg = Examples.testGarbageCollector();
         try {
             MyIDictionary<String, Type> typeEnv7 = new MyDictionary<>();
             garbageCollectorProg.typeCheck(typeEnv7);
@@ -334,7 +139,7 @@ public class View {
         }
 
         // --- Test Fork setup
-        IStmt forkProg = testFork();
+        IStmt forkProg = Examples.testFork();
         try {
             MyIDictionary<String, Type> typeEnv8 = new MyDictionary<>();
             forkProg.typeCheck(typeEnv8);

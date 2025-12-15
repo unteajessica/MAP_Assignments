@@ -47,4 +47,9 @@ public class MyDictionary<K, V> implements MyIDictionary<K, V> {
         }
         return newDict;
     }
+
+    @Override
+    public Map<K, V> getContent() {
+        return map;
+    }
 }

@@ -1,6 +1,7 @@
 package model.adt;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface MyIDictionary<K, V> {
     void put(K key, V val);          // add or update
@@ -10,4 +11,5 @@ public interface MyIDictionary<K, V> {
     String toString();
     Collection<V> getValues();
     MyIDictionary<K, V> deepCopy();
+    Map<K, V> getContent();
 }

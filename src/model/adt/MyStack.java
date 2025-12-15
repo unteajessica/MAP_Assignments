@@ -1,6 +1,8 @@
 package model.adt;
 
 import exceptions.StackIsEmpty;
+
+import java.util.List;
 import java.util.Stack;
 
 public class MyStack<T> implements MyIStack<T> {
@@ -29,4 +31,13 @@ public class MyStack<T> implements MyIStack<T> {
     public String toString() {
         return stack.toString();
     }
+
+    @Override
+    public List<T> toList() {
+        // returns a snapshot, top-first, without changing the stack
+        List<T> list = new java.util.ArrayList<>(stack);
+        java.util.Collections.reverse(list);
+        return list;
+    }
+
 }
